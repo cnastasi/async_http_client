@@ -1,0 +1,22 @@
+{
+  "name": "cnastasi/async_http_client",
+  "description": "This simple client permits to execute multiple request in parallel, in a non blocking way.",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Christian Nastasi",
+      "email": "christian.nastasi@gmail.com"
+    }
+  ],
+  "require": {
+    "react/react": "^0.4",
+    "react/promise": "^2.5",
+    "react/dns": "^0.4.3"
+  },
+  "autoload": {
+    "psr-4": {
+      "AsyncHttpClient\\": "src/"
+    }
+  }
+}
