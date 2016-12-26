@@ -33,8 +33,6 @@ class AsyncHttpClientDefault implements AsyncHttpClient
      */
     private $loop;
 
-    /** @var  AsyncHttpService */
-    private $currentService;
     /**
      * @var AsyncHttpLogger
      */
@@ -78,9 +76,7 @@ class AsyncHttpClientDefault implements AsyncHttpClient
 
     private function createRequest(AsyncHttpService $service)
     {
-        $request = $this->client->request($this->currentService->getMethod(), $this->currentService->getUrl());
-
-        return $request;
+        return $this->client->request($service->getMethod(), $service->getUrl());
     }
 
     private function defineHandlers(Request $request, AsyncHttpService $service)
