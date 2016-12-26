@@ -41,7 +41,9 @@ class AsyncHttpClientDefault implements AsyncHttpClient
     /**
      * AsyncServiceExecutor constructor.
      *
-     * @param ReactClient $client
+     * @param ReactClient     $client
+     * @param LoopInterface   $loop
+     * @param AsyncHttpLogger $logger
      */
     public function __construct(ReactClient $client, LoopInterface $loop, AsyncHttpLogger $logger)
     {
