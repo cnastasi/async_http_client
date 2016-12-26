@@ -6,7 +6,7 @@
  * Time: 8:40 PM
  */
 
-namespace AsyncHttpClient;
+namespace AsyncHttpClient\Core;
 
 use React\HttpClient\Response;
 

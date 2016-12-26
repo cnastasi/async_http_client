@@ -1,6 +1,6 @@
 <?php
 
-namespace AsyncHttpClient;
+namespace AsyncHttpClient\Core;
 
 /**
  * Created by PhpStorm.
