@@ -10,10 +10,12 @@ namespace AsyncHttpClient\Core;
 
 
 use AsyncHttpClient\Logger\AsyncHttpLogger;
+use AsyncHttpClient\Service\AsyncHttpService;
 use Mockery;
 use React\EventLoop\LoopInterface;
 use React\HttpClient\Client;
 use React\HttpClient\Request;
+use React\HttpClient\Response;
 
 class AsyncHttpClientDefaultTest extends \PHPUnit_Framework_TestCase
 {
@@ -32,6 +34,8 @@ class AsyncHttpClientDefaultTest extends \PHPUnit_Framework_TestCase
         $asyncClient->addService($service);
 
         $asyncClient->send();
+
+        Mockery::close();
     }
 
     /**
@@ -41,7 +45,7 @@ class AsyncHttpClientDefaultTest extends \PHPUnit_Framework_TestCase
     {
         $mock = Mockery::mock(Client::class);
 
-        $request = $this->mockRequest();
+        $request = $this->mockRequest('aa');
 
         $mock->shouldReceive('request')->with($method, $url)->andReturn($request);
 
@@ -68,6 +72,7 @@ class AsyncHttpClientDefaultTest extends \PHPUnit_Framework_TestCase
         $mock = Mockery::mock(AsyncHttpLogger::class);
 
         $mock->shouldReceive('logTotal')->once();
+        $mock->shouldReceive('log')->once();
 
         return $mock;
     }
@@ -79,8 +84,10 @@ class AsyncHttpClientDefaultTest extends \PHPUnit_Framework_TestCase
     {
         $mock = Mockery::mock(AsyncHttpService::class);
 
-        $mock->shouldReceive('getMethod')->once()->andReturn($method);
-        $mock->shouldReceive('getUrl')->once()->andReturn($url);
+        $mock->shouldReceive('getMethod')->twice()->andReturn($method);
+        $mock->shouldReceive('getUrl')->twice()->andReturn($url);
+        $mock->shouldReceive('execute')->once();
+
 
         return $mock;
     }
@@ -88,7 +95,7 @@ class AsyncHttpClientDefaultTest extends \PHPUnit_Framework_TestCase
     /**
      * @return Mockery\MockInterface|Request
      */
-    private function mockRequest()
+    private function mockRequest($data)
     {
         $mock = Mockery::mock(Request::class);
 
@@ -96,11 +103,36 @@ class AsyncHttpClientDefaultTest extends \PHPUnit_Framework_TestCase
             return false;
         };
 
-        $mock->shouldReceive(['on'=>function () {
-            return count(func_get_args()) == 3;
-        }]);
+        $mock->shouldReceive('on')->withArgs(function ($event, $closure) use ($data) {
+            if ($event !== 'response') {
+                return false;
+            }
+
+            $response = $this->mockResponse ();
+
+            $response->shouldReceive('on')->withArgs(function ($event, $closure) use ($data, $response) {
+                if ($event !== 'data' && $event != 'error') {
+                    return false;
+                }
+
+                $closure($data, $response);
+
+                return true;
+            });
+
+            $closure($response);
+
+            return true;
+        }
+        );
 
         $mock->shouldReceive('end')->once();
+
+        return $mock;
+    }
+
+    private function mockResponse() {
+        $mock = Mockery::mock(Response::class);
 
         return $mock;
     }

@@ -10,6 +10,7 @@ namespace AsyncHttpClient\Core;
 
 
 use AsyncHttpClient\Logger\AsyncHttpLogger;
+use AsyncHttpClient\Service\AsyncHttpService;
 use React\EventLoop\LoopInterface;
 use React\HttpClient\Client as ReactClient;
 use React\HttpClient\Request;

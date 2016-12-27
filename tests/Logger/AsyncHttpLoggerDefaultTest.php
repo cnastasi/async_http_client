@@ -44,6 +44,8 @@ class AsyncHttpLoggerDefaultTest extends \PHPUnit_Framework_TestCase
         PHPUnit::assertArrayHasKey('total', $result[1]);
         PHPUnit::assertEquals($deltaTime, $result[1]['total']);
 
+        \Mockery::close();
+
     }
 
     private function mockTime($now)

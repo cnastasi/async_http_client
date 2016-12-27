@@ -2,6 +2,8 @@
 
 namespace AsyncHttpClient\Core;
 
+use AsyncHttpClient\Service\AsyncHttpService;
+
 /**
  * Created by PhpStorm.
  * User: christian
