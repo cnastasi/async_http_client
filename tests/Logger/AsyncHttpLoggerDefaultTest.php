@@ -9,6 +9,7 @@
 namespace AsyncHttpClient\Logger;
 
 
+use AsyncHttpClient\Helper\Time;
 use PHPUnit_Framework_Assert as PHPUnit;
 
 class AsyncHttpLoggerDefaultTest extends \PHPUnit_Framework_TestCase
@@ -19,27 +20,36 @@ class AsyncHttpLoggerDefaultTest extends \PHPUnit_Framework_TestCase
         $url = "http://www.lombax.it/api.php";
         $data = "TEST_DATA";
         $startTime = microtime(true);
+        $deltaTime = 2; // the amount of time between start and end
+        $endTime = $startTime + $deltaTime;
 
         $expectedLog = [
             'method'        => $method,
             'url'           => $url,
             'data'          => $data,
             'startTime'     => $startTime,
-            'endTime'       => null,
+            'endTime'       => $endTime,
         ];
 
-        $logger = new AsyncHttpLoggerDefault();
+        $time = $this->mockTime($endTime);
+
+        $logger = new AsyncHttpLoggerDefault($time);
         $logger->log($method, $url, $data, $startTime);
         $logger->logTotal($startTime);
 
         $result = $logger->getLogs();
 
-        $expectedLog['endTime'] = $result[0]['endTime']; // TODO: i'm not really testing endTime now
-
-
         PHPUnit::assertEquals(2, count($result));
         PHPUnit::assertEquals($expectedLog, $result[0]);
         PHPUnit::assertArrayHasKey('total', $result[1]);
+        PHPUnit::assertEquals($deltaTime, $result[1]['total']);
 
+    }
+
+    private function mockTime($now)
+    {
+        $mock = \Mockery::mock(Time::class);
+        $mock->shouldReceive('now')->twice()->andReturn($now);
+        return $mock;
     }
 }

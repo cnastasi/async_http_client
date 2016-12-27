@@ -9,21 +9,31 @@
 namespace AsyncHttpClient\Logger;
 
 
+use AsyncHttpClient\Helper\Time;
+
 class AsyncHttpLoggerDefault implements AsyncHttpLogger
 {
+    /**
+     * @var Array
+     */
     private $logs = [];
+
+    /**
+     * @var Time
+     */
+    private $time;
 
     /**
      * AsyncHttpLoggerDefault constructor.
      */
-    public function __construct()
+    public function __construct(Time $time)
     {
-
+        $this->time = $time;
     }
 
     public function log($method, $url, $data, $startTime)
     {
-        $endTime = microtime(true);
+        $endTime = $this->time->now();
 
         // TODO: Implement log() method.
         $logLine = [
@@ -39,7 +49,7 @@ class AsyncHttpLoggerDefault implements AsyncHttpLogger
 
     public function logTotal($startTime)
     {
-        $endTime = microtime(true);
+        $endTime = $this->time->now();
         $this->logs[] = ['total' => $endTime - $startTime];
     }
 
