@@ -14,7 +14,7 @@ use AsyncHttpClient\Helper\Time;
 class AsyncHttpLoggerDefault implements AsyncHttpLogger
 {
     /**
-     * @var Array
+     * @var array
      */
     private $logs = [];
 
