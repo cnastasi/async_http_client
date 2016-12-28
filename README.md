@@ -12,7 +12,7 @@ This simple client permits to execute multiple request in parallel, in a non blo
 - php >=5.6
 
 ## Installation
-`composer require 'cnastasi\async_http_client`
+`composer require cnastasi\async_http_client`
 
 ## Usage
 ```php
