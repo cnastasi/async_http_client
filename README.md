@@ -10,8 +10,10 @@ This simple client permits to execute multiple request in parallel, in a non blo
 ## Prerequisites
 - composer
 - php >=5.6
+
 ## Installation
 `composer require 'cnastasi\async_http_client`
+
 ## Usage
 ```php
 $loop               = \React\EventLoop\Factory::create();
