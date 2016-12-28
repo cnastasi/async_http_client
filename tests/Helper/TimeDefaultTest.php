@@ -20,6 +20,6 @@ class TimeDefaultTest extends \PHPUnit_Framework_TestCase
         $now = $time->now();
 
         \PHPUnit_Framework_Assert::assertEquals('double', gettype($now));
-        \PHPUnit_Framework_Assert::assertEquals(microtime(true), $now, 'Now is not now', 0.01);
+        \PHPUnit_Framework_Assert::assertEquals(microtime(true), $now, 'Now is not now', 0.1);
     }
 }
