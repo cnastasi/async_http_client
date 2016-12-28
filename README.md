@@ -39,9 +39,12 @@ $async->send();
 3. Commit your changes: `git commit -am 'Add some feature'`
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a pull request :D
+
 ## History
 That's the way how I survived the last Christmas :P 
+
 ## Credits
 Thanks to [Fabio Lombardo](https://github.com/lombax85 "Fabio Lombardo github's page")
+
 ## License
 [MIT License](https://github.com/cnastasi/async_http_client/blob/master/LICENSE)
