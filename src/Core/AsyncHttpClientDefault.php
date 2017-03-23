@@ -79,7 +79,10 @@ class AsyncHttpClientDefault implements AsyncHttpClient
 
     private function createRequest(AsyncHttpService $service)
     {
-        return $this->client->request($service->getMethod(), $service->getUrl());
+        $request = $this->client->request($service->getMethod(), $service->getUrl(), $service->getHeaders());
+        $request->write($service->getContent());
+        
+        return $request;
     }
 
     private function defineHandlers(Request $request, AsyncHttpService $service)
