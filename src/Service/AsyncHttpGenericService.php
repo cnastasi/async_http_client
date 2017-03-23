@@ -22,16 +22,23 @@ class AsyncHttpGenericService implements AsyncHttpService
      * @var string
      */
     private $url;
-
+    
+    /**
+     * @var string
+     */
+    private $content;
+    
     /**
      * @var callable
      */
     private $callback;
 
-    public function __construct($method, $url, callable $callback = null)
+    
+    public function __construct($method, $url, $content, callable $callback = null)
     {
         $this->method   = $method;
         $this->url      = $url;
+        $this->content  = $content;
         $this->callback = $callback;
     }
 
@@ -50,7 +57,12 @@ class AsyncHttpGenericService implements AsyncHttpService
     {
         return $this->url;
     }
-
+    
+    public function getContent()
+    {
+        return $this->content;
+    }
+    
     /**
      * @param          $data
      * @param Response $response

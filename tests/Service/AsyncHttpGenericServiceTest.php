@@ -17,8 +17,9 @@ class AsyncHttpGenericServiceTest extends MockeryTestCase
 {
     public function test()
     {
-        $method   = 'GET';
+        $method   = 'POST';
         $url      = 'http://www.google.it';
+        $content  = 'field1=1&field2=2';
         $called   = false;
         $data     = '{ "result": true }';
         $response = $this->mockResponse();
@@ -30,13 +31,14 @@ class AsyncHttpGenericServiceTest extends MockeryTestCase
             PHPUnit::assertEquals($response, $r);
         };
 
-        $service = new AsyncHttpGenericService($method, $url, $callback);
+        $service = new AsyncHttpGenericService($method, $url, $content, $callback);
 
         $service->execute($data, $response);
 
         PHPUnit::assertTrue($called);
         PHPUnit::assertEquals($method, $service->getMethod());
         PHPUnit::assertEquals($url, $service->getUrl());
+        PHPUnit::assertEquals($content, $service->getContent());
     }
 
     private function mockResponse()
