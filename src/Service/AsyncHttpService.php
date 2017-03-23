@@ -21,6 +21,11 @@ interface AsyncHttpService
      * @return string
      */
     public function getUrl();
+    
+    /**
+     * @return string
+     */
+    public function getContent();
 
     /**
      * @param          $data
