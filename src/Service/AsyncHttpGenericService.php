@@ -58,9 +58,28 @@ class AsyncHttpGenericService implements AsyncHttpService
         return $this->url;
     }
     
+    /**
+     * @return string
+     */
     public function getContent()
     {
         return $this->content;
+    }
+    
+    /**
+     * @return array
+     */
+    public function getHeaders()
+    {
+        if ($this->getMethod() == 'POST')
+        {
+            return [
+                'Content-Length' => strlen($this->getContent()),
+                'Content-Type' => 'application/x-www-form-urlencoded'
+            ];
+        }
+        
+        return null;
     }
     
     /**

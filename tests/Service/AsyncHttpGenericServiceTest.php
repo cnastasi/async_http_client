@@ -15,7 +15,7 @@ use React\HttpClient\Response;
 
 class AsyncHttpGenericServiceTest extends MockeryTestCase
 {
-    public function test()
+    public function testPOST()
     {
         $method   = 'POST';
         $url      = 'http://www.google.it';
@@ -23,6 +23,10 @@ class AsyncHttpGenericServiceTest extends MockeryTestCase
         $called   = false;
         $data     = '{ "result": true }';
         $response = $this->mockResponse();
+        $expectedHeaders    = [
+            'Content-Length' => strlen($content),
+            'Content-Type' => 'application/x-www-form-urlencoded'
+        ];
 
         $callback = function ($d, Response $r) use (&$called, $data, $response) {
             $called = true;
@@ -39,6 +43,35 @@ class AsyncHttpGenericServiceTest extends MockeryTestCase
         PHPUnit::assertEquals($method, $service->getMethod());
         PHPUnit::assertEquals($url, $service->getUrl());
         PHPUnit::assertEquals($content, $service->getContent());
+        PHPUnit::assertEquals($expectedHeaders, $service->getHeaders());
+    }
+    
+    public function testGET()
+    {
+        $method   = 'GET';
+        $url      = 'http://www.google.it';
+        $content  = null;
+        $called   = false;
+        $data     = '{ "result": true }';
+        $response = $this->mockResponse();
+        $expectedHeaders    = null;
+    
+        $callback = function ($d, Response $r) use (&$called, $data, $response) {
+            $called = true;
+        
+            PHPUnit::assertEquals($data, $d);
+            PHPUnit::assertEquals($response, $r);
+        };
+    
+        $service = new AsyncHttpGenericService($method, $url, $content, $callback);
+    
+        $service->execute($data, $response);
+    
+        PHPUnit::assertTrue($called);
+        PHPUnit::assertEquals($method, $service->getMethod());
+        PHPUnit::assertEquals($url, $service->getUrl());
+        PHPUnit::assertEquals($content, $service->getContent());
+        PHPUnit::assertEquals($expectedHeaders, $service->getHeaders());
     }
 
     private function mockResponse()
