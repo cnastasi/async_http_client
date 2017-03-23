@@ -54,7 +54,7 @@ class AsyncHttpGenericServiceTest extends MockeryTestCase
         $called   = false;
         $data     = '{ "result": true }';
         $response = $this->mockResponse();
-        $expectedHeaders    = null;
+        $expectedHeaders    = [];
     
         $callback = function ($d, Response $r) use (&$called, $data, $response) {
             $called = true;
