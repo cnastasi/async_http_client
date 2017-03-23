@@ -63,7 +63,11 @@ class AsyncHttpGenericService implements AsyncHttpService
      */
     public function getContent()
     {
-        return $this->content;
+        if ($this->getMethod() == 'POST') {
+            return $this->content;
+        }
+        
+        return null;
     }
     
     /**
