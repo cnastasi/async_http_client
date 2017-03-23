@@ -16,22 +16,39 @@ This simple client permits to execute multiple request in parallel, in a non blo
 
 ## Usage
 ```php
+
+use AsyncHttpClient\Core\AsyncHttpClient;
+use AsyncHttpClient\Core\AsyncHttpClientDefault;
+use AsyncHttpClient\Helper\TimeDefault;
+use AsyncHttpClient\Logger\AsyncHttpLoggerDefault;
+use AsyncHttpClient\Service\AsyncHttpGenericService;
+
+
 $loop               = \React\EventLoop\Factory::create();
 $dnsResolverFactory = new \React\Dns\Resolver\Factory();
 $dnsResolver        = $dnsResolverFactory->createCached('8.8.8.8', $loop);
 $factory            = new \React\HttpClient\Factory();
 $client             = $factory->create($loop, $dnsResolver);
-$logger             = new AsyncHttpLoggerDefault();
+$logger             = new AsyncHttpLoggerDefault(new TimeDefault());
 
 $asyncClient = new AsyncHttpClientDefault($client, $loop, $logger);
 
-$service = new AsyncHttpGenericService('GET', 'http://www.google.it', function ($data, $request) {
+$service = new AsyncHttpGenericService('GET', 'http://www.google.it', null, function ($data, $request) {
     // Do something
 });
 
-$asyncClient->addService($service);
+$anotherService = new AsyncHttpGenericService('POST', 'http://www.another.service.com', http_build_query(['postfield1' => 'value']) , function ($data, $request) {
+    // Do something more
+});
 
-$async->send();
+$asyncClient->addService($service);
+$asyncClient->addService($anotherService);
+
+$asyncClient->send(); // code execution will block here and the HTTP calls will be dispatched in parallel
+
+// the code execution will continue only after all http calls are dispatched and returned (callback called)
+// do other stuff here
+
 ```
 ## Contributing
 1. Fork it!
