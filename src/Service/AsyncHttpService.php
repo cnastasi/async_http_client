@@ -26,6 +26,11 @@ interface AsyncHttpService
      * @return string
      */
     public function getContent();
+    
+    /**
+     * @return array
+     */
+    public function getHeaders();
 
     /**
      * @param          $data
