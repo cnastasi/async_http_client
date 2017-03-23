@@ -83,7 +83,7 @@ class AsyncHttpGenericService implements AsyncHttpService
             ];
         }
         
-        return null;
+        return [];
     }
     
     /**
