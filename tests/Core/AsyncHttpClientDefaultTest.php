@@ -19,15 +19,16 @@ use React\HttpClient\Response;
 
 class AsyncHttpClientDefaultTest extends \PHPUnit_Framework_TestCase
 {
-    public function test()
+    public function testGET()
     {
-        $method = 'GET';
-        $url    = 'RandomUrl';
+        $method             = 'GET';
+        $url                = 'RandomUrl';
+        $expectedHeaders    = [];
 
-        $reactClient = $this->mockReactClient($method, $url);
+        $reactClient = $this->mockReactClient($method, $url, $expectedHeaders);
         $eventLoop   = $this->mockEventLoop();
         $logger      = $this->mockLogger();
-        $service     = $this->mockService($method, $url);
+        $service     = $this->mockService($method, $url, $expectedHeaders);
 
         $asyncClient = new AsyncHttpClientDefault($reactClient, $eventLoop, $logger);
 
@@ -41,13 +42,13 @@ class AsyncHttpClientDefaultTest extends \PHPUnit_Framework_TestCase
     /**
      * @return Mockery\MockInterface|Client
      */
-    private function mockReactClient($method, $url)
+    private function mockReactClient($method, $url, $headers)
     {
         $mock = Mockery::mock(Client::class);
 
         $request = $this->mockRequest('aa');
 
-        $mock->shouldReceive('request')->with($method, $url)->andReturn($request);
+        $mock->shouldReceive('request')->with($method, $url, $headers)->andReturn($request);
 
         return $mock;
     }
@@ -80,15 +81,17 @@ class AsyncHttpClientDefaultTest extends \PHPUnit_Framework_TestCase
     /**
      * @return Mockery\MockInterface|AsyncHttpService
      */
-    private function mockService($method, $url)
+    private function mockService($method, $url, $headers)
     {
         $mock = Mockery::mock(AsyncHttpService::class);
 
         $mock->shouldReceive('getMethod')->twice()->andReturn($method);
         $mock->shouldReceive('getUrl')->twice()->andReturn($url);
+        $mock->shouldReceive('getHeaders')->once()->andReturn($headers);
+        $mock->shouldReceive('getContent')->once();
         $mock->shouldReceive('execute')->once();
-
-
+        
+        
         return $mock;
     }
 
@@ -125,6 +128,8 @@ class AsyncHttpClientDefaultTest extends \PHPUnit_Framework_TestCase
             return true;
         }
         );
+        
+        $mock->shouldReceive('write')->once();
 
         $mock->shouldReceive('end')->once();
 
